@@ -59,20 +59,17 @@ Dann http://localhost:8767 öffnen. In Claude Code heißt die Vorschau „aktend
 
 ## Plesk einrichten
 
-Plesk verwendet für alle Repositories eines Abonnements denselben SSH-Schlüssel, und der ist schon Deploy Key der Website. GitHub erlaubt einen Deploy Key nur für ein Repository. Deshalb holt Plesk die App per HTTPS mit einem Token, das nur dieses eine Repository lesen darf.
+Das Repository ist **öffentlich**, damit Plesk es ohne Zugangsdaten holen kann. Zwei Wege mit Zugangsdaten scheiterten: Den SSH-Schlüssel des Abonnements nutzt schon die Website als Deploy Key (GitHub erlaubt ihn nur einmal), und für HTTPS mit Token fehlen dem Plesk-Hilfsskript `pass-from-env.sh` die Ausführungsrechte.
+Deshalb gilt: **Niemals Geheimnisse committen.** Der Anthropic-Schlüssel liegt nur in den Supabase-Secrets, der `service_role`-Schlüssel nirgends im Code. Sichtbar sind nur Code, Schema und diese README. Die Daten schützen Login und Zugriffsregeln.
 
 1. **Subdomain** `app.steinerundco.de` mit Dokumentenstamm **`app.steinerundco.de/public`**. Den DNS-Eintrag gibt es schon.
-2. **Token auf GitHub:** Profilbild → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token.
-   Name `Plesk app.steinerundco.de`, längste angebotene Laufzeit (Erinnerung zum Erneuern in den Kalender),
-   Repository access: *Only select repositories* → `steinerundco-app`, Permissions → *Contents: Read-only*. Token kopieren.
-3. **Plesk → app.steinerundco.de → Git → Repository hinzufügen:**
-   - Remote repository, URL: `https://vincentsteiner01:TOKEN@github.com/vincentsteiner01/steinerundco-app.git` (TOKEN durch das kopierte Token ersetzen). Das Feld mit dem SSH-Schlüssel ignorieren.
-   - Deployment mode: **Automatic**
-   - Server path: **`/app.steinerundco.de`** – das Stammverzeichnis, *nicht* `/app.steinerundco.de/public`. Das Repository enthält den Ordner `public/` selbst.
-4. **Webhook:** In Plesk beim Repository die Webhook-URL kopieren. Auf GitHub im Repository `steinerundco-app` → Settings → Webhooks → Add webhook: Payload URL einfügen, Content type `application/json`, „Just the push event“.
-5. **SSL/TLS-Zertifikate:** Let's Encrypt für `app.steinerundco.de`, unter Hosting die 301-Weiterleitung auf HTTPS aktivieren.
+2. **Plesk → app.steinerundco.de → Git → Repository hinzufügen:**
+   - Remote repository, URL `https://github.com/vincentsteiner01/steinerundco-app.git`, Username und Password leer
+   - Deployment mode **Automatic**, Server path **`/app.steinerundco.de`** (Stammverzeichnis, *nicht* `…/public`)
+3. **Webhook:** In Plesk beim Repository die Webhook-URL kopieren. Auf GitHub im Repository → Settings → Webhooks → Add webhook: Payload URL einfügen, Content type `application/json`, „Just the push event“.
+4. **SSL/TLS-Zertifikate:** Let's Encrypt für `app.steinerundco.de`, unter Hosting die 301-Weiterleitung auf HTTPS aktivieren.
 
-Weil der Dokumentenstamm `public/` ist, sind README, Migrationen und Tests nicht über das Web erreichbar.
+Weil der Dokumentenstamm `public/` ist, liefert die Website README, Migrationen und Tests nicht aus.
 
 ## Veröffentlichen
 
