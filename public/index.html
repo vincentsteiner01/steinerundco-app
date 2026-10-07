@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#07080d">
+  <title>Akten · Steiner &amp; Co.</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="preload" href="fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/app.css">
+  <!-- supabase-js, Version fest eingetragen und per Prüfsumme abgesichert -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"
+          integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok"
+          crossorigin="anonymous"></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#inhalt">Zum Inhalt</a>
+
+  <header class="topbar" id="topbar" hidden>
+    <a class="brand" href="#/">
+      <span class="brand-mark">Akten</span>
+      <span class="brand-sub">Steiner &amp; Co.</span>
+    </a>
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a class="nav-link" href="#/" data-nav="liste">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <span>Akten</span>
+      </a>
+      <a class="nav-link nav-upload" href="#/neu" data-nav="neu">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Hochladen</span>
+      </a>
+      <a class="nav-link" href="#/papierkorb" data-nav="papierkorb">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+        <span>Papierkorb</span>
+      </a>
+    </nav>
+    <div class="topbar-user">
+      <span class="user-name" id="user-name"></span>
+      <button class="btn btn-quiet" id="abmelden" type="button">Abmelden</button>
+    </div>
+  </header>
+
+  <main id="inhalt" tabindex="-1"></main>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+  <noscript><p class="noscript">Das Aktendashboard braucht JavaScript.</p></noscript>
+</body>
+</html>
