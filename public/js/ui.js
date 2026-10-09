@@ -54,10 +54,21 @@ export function toast(message, type = 'info') {
 export function errorText(err) {
   const msg = String(err?.message || err || '');
   const code = err?.code || err?.error_code || '';
+  if (/not authorized/i.test(msg) || code === 'email_address_not_authorized') {
+    return 'An diese Adresse darf Supabase noch keine Mails schicken. Dafür muss der eigene Mailversand (SMTP) eingerichtet oder die Adresse ins Supabase-Team eingeladen sein.';
+  }
   if (/signups not allowed|user not found/i.test(msg) || code === 'otp_disabled') {
     return 'Diese Adresse ist nicht freigeschaltet.';
   }
-  if (/rate limit|too many|security purposes/i.test(msg) || code === 'over_email_send_rate_limit') {
+  // Supabase erlaubt pro Adresse nur eine Mail je Minute – die vorige ist dann schon unterwegs.
+  const wait = msg.match(/after (\d+) seconds?/i);
+  if (wait) {
+    return `Wir haben dir gerade schon eine Mail geschickt – schau in dein Postfach, auch in den Spam-Ordner. Einen neuen Link kannst du in ${wait[1]} Sekunden anfordern.`;
+  }
+  if (/email rate limit/i.test(msg)) {
+    return 'Für diese Stunde sind alle Anmeldemails verbraucht. Nutze den Link aus einer früheren Mail oder versuch es später noch einmal.';
+  }
+  if (/rate limit|too many/i.test(msg) || code === 'over_email_send_rate_limit') {
     return 'Zu viele Anfragen. Bitte warte ein paar Minuten und versuch es dann noch einmal.';
   }
   if (/token has expired|token is invalid|otp_expired|invalid otp/i.test(msg)) {

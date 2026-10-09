@@ -49,7 +49,13 @@ export function renderLogin({ linkError } = {}) {
         rememberEmail(email);
         stepCode(email);
       } catch (err) {
-        stepEmail(errorText(err), true, email);
+        // Gerade erst eine Mail verschickt: direkt zur Code-Eingabe statt zurück zum Formular.
+        if (/after \d+ seconds?/i.test(err?.message || '')) {
+          rememberEmail(email);
+          stepCode(email, errorText(err));
+        } else {
+          stepEmail(errorText(err), true, email);
+        }
       }
     });
 

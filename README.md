@@ -50,7 +50,11 @@ Dann http://localhost:8767 öffnen. In Claude Code heißt die Vorschau „aktend
    - Username: dieselbe Google-Adresse, Password: das App-Passwort (16 Zeichen, ohne Leerzeichen)
 4. **Authentication → Emails → Templates → Magic Link:** Betreff `Dein Anmeldelink für die Akten`, als Inhalt alles aus `supabase/mail-vorlage-magic-link.html`. Die Standardmail enthält nur den Link; erst mit dieser Vorlage steht auch der Code darin, den die Anmeldeseite für ein zweites Gerät anbietet.
 5. **Authentication → Users → Add user → Create new user:** beide Konten anlegen, „Auto Confirm User“ anhaken, als Passwort ein langes Zufallspasswort aus dem Passwortmanager (wird nie benutzt). Danach werden sie per SQL in `members` eingetragen:
+   Wer per Einladung angelegt wurde und sie nie angenommen hat, gilt als unbestätigt und kann sich bei abgeschalteter Registrierung nicht anmelden. Deshalb beim Freischalten auch bestätigen:
    ```sql
+   update auth.users set email_confirmed_at = now()
+   where email in ('…', '…') and email_confirmed_at is null;
+
    insert into public.members (user_id, email, display_name)
    select id, email, case when email like 'vincent%' then 'Vincent' else 'Mike' end
    from auth.users where email in ('…', '…');
