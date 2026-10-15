@@ -14,18 +14,21 @@ AddDefaultCharset utf-8
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 
+  # Hinweis: Auf dem IONOS-Plesk-Server kommen „Header always set“-Zeilen nicht beim Browser an (geprüft 15.10.2026);
+  # „Header set“ wirkt. Für statische Seiten reicht „set“.
+
   # Privates Werkzeug: nicht in Suchmaschinen
-  Header always set X-Robots-Tag "noindex, nofollow"
+  Header set X-Robots-Tag "noindex, nofollow"
 
   # Sicherheits-Header
-  Header always set Strict-Transport-Security "max-age=31536000"
-  Header always set X-Content-Type-Options "nosniff"
-  Header always set Referrer-Policy "no-referrer"
-  Header always set X-Frame-Options "DENY"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Strict-Transport-Security "max-age=31536000"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set X-Frame-Options "DENY"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
   # Erlaubt nur eigene Dateien, supabase-js von jsDelivr und das Supabase-Projekt.
   # blob: für die Vorschau beim Hochladen, data: für das Pfeil-Symbol in Auswahlfeldern.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; font-src 'self'; img-src 'self' blob: data: https://ekaqkfgvisdngsskzbai.supabase.co; frame-src blob: https://ekaqkfgvisdngsskzbai.supabase.co; connect-src 'self' https://ekaqkfgvisdngsskzbai.supabase.co wss://ekaqkfgvisdngsskzbai.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; font-src 'self'; img-src 'self' blob: data: https://ekaqkfgvisdngsskzbai.supabase.co; frame-src blob: https://ekaqkfgvisdngsskzbai.supabase.co; connect-src 'self' https://ekaqkfgvisdngsskzbai.supabase.co wss://ekaqkfgvisdngsskzbai.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 </IfModule>
 
 <IfModule mod_deflate.c>
